@@ -1,14 +1,17 @@
-# YouTube to MP3 Downloader
+# Media Grabber Console
 
 ## Features
 
 - **Zero Configuration** - Automatically downloads and installs dependencies (yt-dlp & ffmpeg)
-- **Beautiful CLI** - Clean, modern interface with minimal output
-- **Continuous Mode** - Download multiple songs without restarting
-- **Playlist Support** - Download entire playlists or single videos
+- **Paste-Only Flow** - Paste one link and the script auto-detects what to do
+- **Auto Save Both Formats** - For normal video links it saves best video and MP3 together
+- **Max Quality YouTube Video** - Uses the best available video quality instead of capping at 720p
+- **YouTube and Facebook Support** - Works with supported links from both platforms
+- **Cleaner CLI** - Styled terminal output with a more polished dashboard feel
+- **Continuous Mode** - Download multiple files without restarting
+- **Playlist Support** - Download entire playlists or single videos when supported
 - **Silent Operation** - No cluttered logs, only essential feedback
-- **High Quality** - Downloads audio at highest quality available
-- **Organized** - All MP3 files saved to dedicated folder
+- **Organized Library** - Files are grouped by platform, format, and month inside `library/`
 
 ## Requirements
 
@@ -18,7 +21,7 @@
 
 ## Quick Start
 
-1. Download scirpts:
+1. Download scripts:
 
 - Option 1: clone this repo and after run file `yt.ps1`
 - Option 2: create a folder - copy content in file `yt.ps1`
@@ -29,7 +32,7 @@
    .\yt.ps1
    ```
 
-3. Paste YouTube URLs when prompted
+3. Paste a YouTube or Facebook URL when prompted
 4. Type `exit` to quit
 
 That's it! Dependencies are installed automatically on first run.
@@ -45,14 +48,16 @@ That's it! Dependencies are installed automatically on first run.
 The script will:
 1. Show a welcome banner
 2. Auto-install yt-dlp and ffmpeg (first run only)
-3. Prompt for YouTube URLs
-4. Download and convert to MP3
-5. Save files to `mp3/` folder
+3. Prompt for a YouTube or Facebook URL
+4. Auto-detect the source and download mode
+5. Save files into the organized `library/` folders
 
 ### Commands
 
-- **Paste any YouTube video URL** - Downloads single video as MP3
-- **Paste any YouTube playlist URL** - Downloads entire playlist as MP3 files
+- **Paste a YouTube video URL** - Saves best video quality and MP3
+- **Paste a YouTube Music URL** - Saves MP3 only
+- **Paste a Facebook video URL** - Tries to save video and MP3
+- **Paste a supported playlist URL** - Downloads all available items into the matching folders
 - **`exit`** / **`quit`** / **`q`** - Exit the program
 
 ## File Structure
@@ -61,7 +66,16 @@ The script will:
 your-folder/
 ├── yt.ps1          # Main script
 ├── bin/            # Auto-created, contains yt-dlp.exe & ffmpeg.exe
-└── mp3/            # Auto-created, your downloaded MP3 files
+└── library/
+    ├── YouTube/
+    │   ├── MP3/
+    │   └── Video/
+    ├── Facebook/
+    │   ├── MP3/
+    │   └── Video/
+    └── Other/
+        ├── MP3/
+        └── Video/
 ```
 
 ## How It Works
@@ -70,33 +84,34 @@ your-folder/
    - [yt-dlp](https://github.com/yt-dlp/yt-dlp) - YouTube downloader
    - [ffmpeg](https://ffmpeg.org/) - Audio converter
 
-2. **Download** - Fetches highest quality audio from YouTube
+2. **Detect** - Checks whether the link is YouTube, YouTube Music, Facebook, or another supported source
 
-3. **Convert** - Converts to MP3 format using ffmpeg
+3. **Download** - Pulls the best available video and/or extracts MP3 depending on the detected source
 
-4. **Save** - Stores in `mp3/` folder with original video title
+4. **Save** - Stores everything in `library/<platform>/<format>/<yyyy-MM>/`
 
 ## Advanced
 
-### MP3 Quality
+### Auto Detection
 
-The script downloads audio at highest quality (`--audio-quality 0`). To change quality, edit line ~112:
+The script uses this default behavior:
 
-```powershell
---audio-quality 0  # 0 = best, 9 = worst
-```
+- `music.youtube.com` links: MP3 only
+- Standard YouTube video links: best video quality + MP3
+- Facebook video links: video + MP3 when available
+- Other supported links: best video quality + MP3
 
 ### Output Location
 
-To change output folder, edit line 11:
+To change the main output location, edit the directory variable near the top of the script:
 
 ```powershell
-$mp3Dir = "$baseDir\mp3"  # Change "mp3" to your preferred folder
+$libraryDir = "$baseDir\library"
 ```
 
 ### Playlists
 
-Paste any YouTube playlist URL and the script will automatically download all videos as MP3 files. Works with:
+Paste a supported playlist URL and the script will automatically download all items in the selected format. Works with:
 - Public playlists
 - Your own playlists (if public)
 - Mix playlists
@@ -115,4 +130,4 @@ https://www.youtube.com/watch?v=xxxxx&list=PLxxxxxxxxxxxxxxxxxx
 
 ---
 
-**Enjoy your music!**
+**Paste one link. The script handles the rest.**
